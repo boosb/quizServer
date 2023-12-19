@@ -1,24 +1,40 @@
-import { Injectable } from '@nestjs/common';
-
-// This should be a real class/interface representing a user entity
-export type User = any;
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './entities/user.entity';
+import * as argon2 from 'argon2';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private jwtService: JwtService
+  ) {}
 
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find(user => user.username === username);
+  async create(createUserDto: CreateUserDto) {
+    const existUser = await this.userRepository.findOne({
+      where: {
+        email: createUserDto.email
+      }
+    });
+
+    if(existUser) {
+      throw new BadRequestException('This email already exist!');
+    }
+
+    const user = await this.userRepository.save({
+      email: createUserDto.email,
+      password: await argon2.hash(createUserDto.password)
+    });
+
+    const token = this.jwtService.sign({email: createUserDto.email});
+
+    return {user, token};
+  }
+
+  async findOne(email: string) {
+    return await this.userRepository.findOne({where: {email}});
   }
 }
