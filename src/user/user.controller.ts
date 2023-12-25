@@ -4,17 +4,19 @@ import { UsersService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService
+  ) {}
 
   @Post()
   @UsePipes(new ValidationPipe())
   create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+    return this.userService.create(createUserDto); // todo посмотреть видос про rxJS и разобраться что за зверь такой Observable и хренли не работает без него
   }
 
-  @Get()
-  test(): string {
-    return 'test controller';
+  @Get('all')
+  getAllUsers() {
+    return this.userService.getAllUsers();
   }
 
  /* @Get()
