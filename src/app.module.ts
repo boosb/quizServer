@@ -5,6 +5,11 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { QuizzesModule } from './quiz/quizzes.module';
+import { QuestionModule } from './question/question.module';
+import { AnswersController } from './answers/answers/answers.controller';
+import { AnswersService } from './answers/answers/answers.service';
+import { AnswersModule } from './answers/answers/answers.module';
 
 @Module({
   imports: [
@@ -24,7 +29,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         entities: [__dirname + '/**/*.entity{.js, .ts}']
       }),
       inject: [ConfigService]
-    })
+    }),
+    QuizzesModule,
+    QuestionModule,
+    AnswersModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../user/user.service';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
-import { IUser } from 'src/types/types';
+import { IUser } from 'src/types/user';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +12,7 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findOne(email);
+    const user = await this.usersService.getUser(email);
     const passwordIsMatch = await argon2.verify(user.password, password);
 
     if (user && passwordIsMatch) {

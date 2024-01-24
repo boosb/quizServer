@@ -34,7 +34,7 @@ export class UsersService {
     return {user, token};
   }
 
-  async findOne(email: string) {
+  async getUser(email: string) {
     return await this.userRepository.findOne({where: {email}});
   }
 
