@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateQuizDto } from './dto/createQuiz.dto';
 import { QuizzesService } from './quizzes.service';
-import { Crud, CrudController } from '@nestjsx/crud';
 import { Quiz } from './entities/quiz.entity';
 
 // todo пробовал использовать crud модуль, но ничего не получилось. 
@@ -25,7 +24,7 @@ export class QuizzesController {
     }
 
     @Post()
-    create(@Body() createQuizDto: CreateQuizDto) {
+    createQuiz(@Body() createQuizDto: CreateQuizDto) {
         return this.quizzesService.createQuiz(createQuizDto);
     }
 

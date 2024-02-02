@@ -14,36 +14,44 @@ export class QuestionService {
         @InjectRepository(Quiz) private readonly quizRepository: Repository<Quiz>
     ) {}
 
-    async getQuestionsAtQuiz(quizId: number) {
+    async getQuestions(quizId: number) {
         const quiz = await this.quizzesService.getQuiz(quizId);
         return quiz.questions;
     }
 
-    async getQuestion(quizId: number, questionId: number) {
+    async getQuestion(questionId: number) {
         const question = await this.questionRepository.findOne({
             where: {
-                id: questionId,
-                quizId: quizId
+                id: questionId
             },
             relations: ['answers']
         });
 
         if(!question) {
-            throw new Error('Answer not found!');
+            throw new Error('Question not found!');
         }
 
-        return 
+        return question;
     }
 
-    async addQuestionAtQuiz(quizId: number, createQuestionDto: CreateQuestionDto) {
-        const quiz = await this.quizzesService.getQuiz(quizId);
+    async createQuestion(createQuestionDto: CreateQuestionDto) {
+        const quiz = await this.quizzesService.getQuiz(createQuestionDto.quizId);
 
         const question = await this.questionRepository.save({
             text: createQuestionDto.text
         });
 
         quiz.questions.push(question);
+        this.quizRepository.save(quiz);
 
-        return this.quizRepository.save(quiz);
+        return question; 
+    }
+
+    async updateQuestion(questionId: number, createQuestionDto: CreateQuestionDto) {
+        return await this.questionRepository.update(questionId, createQuestionDto);
+    }
+
+    async deleteQuestion(questionId: number) {
+        return await this.questionRepository.delete(questionId);
     }
 }

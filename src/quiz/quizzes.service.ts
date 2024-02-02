@@ -31,14 +31,22 @@ export class QuizzesService {
 
     async getQuizzes() {
         return await this.quizRepository.find({
-            relations: ['questions']
+            relations: {
+                questions: {
+                    answers: true
+                }
+            }
         });
     }
 
     async getQuiz(id: number) {
         const quiz = await this.quizRepository.findOne({
             where: {id},
-            relations: ['questions']
+            relations: {
+                questions: {
+                    answers: true
+                }
+            }
         });
 
         if(!quiz) {
