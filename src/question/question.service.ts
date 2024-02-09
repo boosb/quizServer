@@ -48,7 +48,9 @@ export class QuestionService {
     }
 
     async updateQuestion(questionId: number, createQuestionDto: CreateQuestionDto) {
-        return await this.questionRepository.update(questionId, createQuestionDto);
+        return await this.questionRepository.update(questionId, {
+            text: createQuestionDto.text
+        });
     }
 
     async deleteQuestion(questionId: number) {

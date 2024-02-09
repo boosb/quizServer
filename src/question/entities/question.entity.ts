@@ -1,6 +1,6 @@
 import { Answer } from "src/answers/entities/answer.entity";
 import { Quiz } from "src/quiz/entities/quiz.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Question {

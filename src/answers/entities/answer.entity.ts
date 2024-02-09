@@ -12,8 +12,11 @@ export class Answer {
     @Column()
     isRight: boolean;
 
-    @ManyToOne(() => Question, (question) => question.answers)
-    @JoinColumn()
+    @ManyToOne(
+        () => Question, 
+        (question) => question.answers,         
+        {onDelete: 'CASCADE'}
+    )
     question: Question;
 
     @RelationId((answer: Answer) => answer.question)
