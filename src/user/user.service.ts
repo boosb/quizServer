@@ -5,11 +5,13 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from './entities/role.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
     private jwtService: JwtService
   ) {}
 
@@ -26,8 +28,12 @@ export class UsersService {
 
     const user = await this.userRepository.save({
       email: createUserDto.email,
-      password: await argon2.hash(createUserDto.password)
+      password: await argon2.hash(createUserDto.password),
+      roleId: createUserDto.roleId || 1, // set the default value
+      role: createUserDto.role || await this.getRole(1)
     });
+
+    console.log(user, ' >>>>> user-user-useruser-user')
 
     const token = this.jwtService.sign({email: createUserDto.email});
 
@@ -35,10 +41,21 @@ export class UsersService {
   }
 
   async getUser(email: string) {
-    return await this.userRepository.findOne({where: {email}});
+    return await this.userRepository.findOne({
+      where: { email },
+      relations: {
+        role: true,
+      },
+    });
   }
 
   async getAllUsers() {
     return await this.userRepository.find();
+  }
+
+  async getRole(id: number) { // todo хз, мб вынесу потом в отдельный сервис
+    return await this.roleRepository.findOne({
+      where: { id }
+    });
   }
 }

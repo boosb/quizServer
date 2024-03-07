@@ -10,7 +10,7 @@ export class Question {
     @Column()
     text: string;
 
-    @ManyToOne(() => Quiz, (quiz) => quiz.questions)
+    @ManyToOne(() => Quiz, (quiz) => quiz.questions, { onDelete: "CASCADE" })
     @JoinColumn()
     quiz: Quiz;
 

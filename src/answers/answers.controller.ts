@@ -8,28 +8,32 @@ export class AnswersController {
         private answersService: AnswersService
     ) {}
 
-    @Get(':id') 
+   /* @Get(':id') 
     getAnswer(@Param('id') id: number) {
         return this.answersService.getAnswer(id);
-    }
+    }*/
 
-    @Get()
+    /*@Get()
     getAnswers(@Query('questionid') questionId: number) {
         return this.answersService.getAnswers(questionId);
+    }*/
+
+    @Get()
+    getAnswersAtQuiz(@Query('quizId') quizId: number) {
+        return this.answersService.getAnswersAtQuiz(quizId);
     }
 
     @Post()
     createAnswer(@Body() createAnswerDto: CreateAnswerDto) {
-        console.log( createAnswerDto )
         return this.answersService.createAnswer(createAnswerDto);
     }
 
-    @Patch()
+    @Patch(':id')
     updateAnswer(@Param('id') id: number, @Body() createAnswerDto: CreateAnswerDto) {
         return this.answersService.updateAnswer(id, createAnswerDto);
     }
 
-    @Delete() 
+    @Delete(':id') 
     deleteAnswer(@Param('id') id: number) {
         return this.answersService.deleteAnswer(id);
     }
