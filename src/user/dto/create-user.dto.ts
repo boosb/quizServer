@@ -12,4 +12,6 @@ export class CreateUserDto {
     roleId: number;
 
     role: Role;
+
+    avatar: string | null
 }

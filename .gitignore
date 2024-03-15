@@ -399,3 +399,6 @@ dist
 .webpack
 .serverless/**/*.zip
 node_modules
+
+# Static files
+static/

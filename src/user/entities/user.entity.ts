@@ -12,12 +12,14 @@ export class User {
     @Column()
     password: string;
 
-    /*@OneToOne(() => Role)
-    @JoinColumn()
-    role: Role;
+    @Column({ default: null })
+    avatar: string | null;
 
-    @Column()
-    roleId: number;*/
+    @Column({ default: null })
+    alias: string | null; // todo это потом исправить, возможно
+
+    @Column({ default: false })
+    isEmailConfirmed: boolean;
 
     @ManyToOne(() => Role, (role) => role.users)
     @JoinColumn()

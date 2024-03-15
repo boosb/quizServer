@@ -8,12 +8,24 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { QuizzesModule } from './quiz/quizzes.module';
 import { QuestionModule } from './question/question.module';
 import { AnswersModule } from './answers/answers.module';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
     UserModule, 
     AuthModule, 
-    ConfigModule.forRoot({isGlobal: true}),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object({
+        EMAIL_SERVICE: Joi.string().required(),
+        EMAIL_USER: Joi.string().required(),
+        EMAIL_PASSWORD: Joi.string().required(),
+        
+        JWT_VERIFICATION_TOKEN_SECRET: Joi.string().required(),
+        JWT_VERIFICATION_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        EMAIL_CONFIRMATION_URL: Joi.string().required(),
+      })
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

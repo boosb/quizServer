@@ -6,4 +6,7 @@ export interface IUser {
     roleId: string|number
     role?: Role
     token?: string
+    isEmailConfirmed: boolean
+    avatar: string | null
+    alias: string | null
 }
