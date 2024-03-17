@@ -19,7 +19,6 @@ export class AuthService {
     //@InjectRepository(Role) private readonly roleRepository: Repository<Role>,
   ) {
     this.nodemailerTransport = createTransport({
-      //service: configService.get('EMAIL_SERVICE'),
       host: 'smtp.mail.ru',
       port: 465,
       secure: true, // use SSL
