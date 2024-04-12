@@ -33,7 +33,7 @@ export class AuthService {
     const user = await this.usersService.getUser(email);
 
     if(!user) {
-      throw new UnauthorizedException('User not found!'); 
+      throw new UnauthorizedException('User not found!');
     }
 
     const passwordIsMatch = await argon2.verify(user.password, password);
@@ -61,8 +61,8 @@ export class AuthService {
     }
   }
 
-  public sendVerificationLink(email: string) {
-    const payload: VerificationTokenPayload = { email };
+  public sendVerificationLink(email: string, oldEmail: string | null) {
+    const payload: VerificationTokenPayload = { email, oldEmail };
     const token = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
       expiresIn: `${this.configService.get('JWT_VERIFICATION_TOKEN_EXPIRATION_TIME')}s`
@@ -80,10 +80,23 @@ export class AuthService {
     });
   }
 
+  public async confirmUpdatedEmail(email: string, oldEmail: string) {
+    const user = await this.usersService.getUser(oldEmail);
+
+    if(!user) {
+      throw new BadRequestException('Oops, something went wrong!');
+    }
+
+    await this.usersService.updateUserEmail(user.id, {email});
+    await this.usersService.markEmailAsConfirmed(email);
+
+    return await this.usersService.getUser(email);
+  }
+
   public async confirmEmail(email: string) {
     const user = await this.usersService.getUser(email);
     if (user.isEmailConfirmed) {
-      throw new BadRequestException('Email already confirmed');
+      throw new BadRequestException('Email already confirmed!');
     }
 
     await this.usersService.markEmailAsConfirmed(email);
@@ -97,8 +110,11 @@ export class AuthService {
         secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
       });
 
-      if (typeof payload === 'object' && 'email' in payload) {
-        return payload.email;
+      if (typeof payload === 'object' && 'email' in payload && 'oldEmail' in payload) {
+        return {
+          email: payload.email,
+          oldEmail: payload.oldEmail
+        };
       }
       throw new BadRequestException();
     } catch (error) {
@@ -109,7 +125,11 @@ export class AuthService {
     }
   }
 
-  _sendMail(options: Mail.Options) {
-    return this.nodemailerTransport.sendMail(options);
+  async _sendMail(options: Mail.Options) {
+    try {
+      return await this.nodemailerTransport.sendMail(options);
+    } catch (error) {
+      throw new BadRequestException('The server was unable to send the message!');
+    }
   }
 }

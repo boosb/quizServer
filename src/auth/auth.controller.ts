@@ -14,7 +14,7 @@ export class AuthController {
     @Post('login')
     @UseGuards(LocalAuthGuard) 
     async login(@Request() req) {
-      return this.authService.login(req.user);
+      return await this.authService.login(req.user);
     }
 
     @Get('profile')
@@ -25,7 +25,11 @@ export class AuthController {
 
     @Post('confirm')
     async confirm(@Body() confirmationData: ConfirmEmailDto) {
-      const email = await this.authService.decodeConfirmationToken(confirmationData.token);
+      const {email, oldEmail} = await this.authService.decodeConfirmationToken(confirmationData.token);
+
+      if(oldEmail) {
+        return await this.authService.confirmUpdatedEmail(email, oldEmail);
+      }
       return await this.authService.confirmEmail(email);
     }
 }

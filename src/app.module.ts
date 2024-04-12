@@ -9,6 +9,7 @@ import { QuizzesModule } from './quiz/quizzes.module';
 import { QuestionModule } from './question/question.module';
 import { AnswersModule } from './answers/answers.module';
 import * as Joi from 'joi';
+import { FilesModule } from './file/files.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import * as Joi from 'joi';
     }),
     QuizzesModule,
     QuestionModule,
-    AnswersModule
+    AnswersModule,
+    FilesModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -7,13 +7,15 @@ import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from './entities/role.entity';
 import { UpdateUserAvatarDto } from './dto/update-user-avatar.dto';
+import { AuthService } from 'src/auth/auth.service';
+import { UpdateUserEmailDto } from './dto/update-user-email.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
-    private jwtService: JwtService,
+    //private jwtService: JwtService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -63,6 +65,10 @@ export class UsersService {
 
   async updateUser(id: number, createUserDto: CreateUserDto) {
     return await this.userRepository.update(id, createUserDto);
+  }
+
+  async updateUserEmail(id: number, updateUserEmailDto: UpdateUserEmailDto) {
+    return await this.userRepository.update(id, updateUserEmailDto);
   }
 
   async updateUserAvatar(id: number, updateUserAvatarDto: UpdateUserAvatarDto) {

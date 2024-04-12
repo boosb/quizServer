@@ -10,6 +10,9 @@ export class Question {
     @Column()
     text: string;
 
+    @Column({nullable: true})
+    img: string | null;
+
     @ManyToOne(() => Quiz, (quiz) => quiz.questions, { onDelete: "CASCADE" })
     @JoinColumn()
     quiz: Quiz;

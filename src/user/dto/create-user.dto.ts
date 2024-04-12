@@ -2,6 +2,8 @@ import { IsEmail, IsNumber, MinLength } from "class-validator";
 import { Role } from "../entities/role.entity";
 
 export class CreateUserDto {
+   // id: string | number;
+
     @IsEmail()
     email: string;
 

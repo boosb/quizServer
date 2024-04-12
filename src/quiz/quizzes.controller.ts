@@ -10,6 +10,7 @@ import { JwtAuthGuard } from 'src/auth/quards/jwt-auth.guard';
 // https://github.com/nestjsx/crud/issues/443
 @Controller('quizzes')
 @UseGuards(JwtAuthGuard) // todo Начать завтра от сюда, разобраться почему гуард не пропускает сразу после регистрации
+// 11.04 появилась новая ошибка загрузки всех викторин после обновления аватарки пользователя! Это из-за гуарда, но почему надо разобраться!
 export class QuizzesController {
     constructor(
         private quizzesService: QuizzesService

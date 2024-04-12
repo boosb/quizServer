@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateQuestionDto } from './dto/createQuestion.dto';
 import { Quiz } from 'src/quiz/entities/quiz.entity';
 import { QuizzesService } from 'src/quiz/quizzes.service';
+import { UpdateQuestionDto } from './dto/updateQuestion.dto';
 
 @Injectable()
 export class QuestionService {
@@ -38,7 +39,8 @@ export class QuestionService {
         const quiz = await this.quizzesService.getQuiz(createQuestionDto.quizId);
 
         const question = await this.questionRepository.save({
-            text: createQuestionDto.text
+            text: createQuestionDto.text,
+            img: createQuestionDto.img
         });
 
         quiz.questions.push(question);
@@ -47,9 +49,10 @@ export class QuestionService {
         return question; 
     }
 
-    async updateQuestion(questionId: number, createQuestionDto: CreateQuestionDto) {
+    async updateQuestion(questionId: number, updateQuestionDto: UpdateQuestionDto) {
         return await this.questionRepository.update(questionId, {
-            text: createQuestionDto.text
+            text: updateQuestionDto.text,
+            img: updateQuestionDto.img
         });
     }
 
