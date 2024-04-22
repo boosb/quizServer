@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards, Get, Body } from "@nestjs/common";
+import { Controller, Request, Post, UseGuards, Get, Body, Param } from "@nestjs/common";
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./quards/jwt-auth.guard";
@@ -31,5 +31,11 @@ export class AuthController {
         return await this.authService.confirmUpdatedEmail(email, oldEmail);
       }
       return await this.authService.confirmEmail(email);
+    }
+
+    @Post('refresh-token')
+    refreshToken() {
+      console.log('hi')
+      this.authService.refreshToken();
     }
 }

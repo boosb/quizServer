@@ -10,6 +10,7 @@ import { QuestionModule } from './question/question.module';
 import { AnswersModule } from './answers/answers.module';
 import * as Joi from 'joi';
 import { FilesModule } from './file/files.module';
+import { HistoryQuizzesModule } from './history-quizzes/history-quizzes.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { FilesModule } from './file/files.module';
     QuizzesModule,
     QuestionModule,
     AnswersModule,
-    FilesModule
+    FilesModule,
+    HistoryQuizzesModule
   ],
   controllers: [AppController],
   providers: [AppService],

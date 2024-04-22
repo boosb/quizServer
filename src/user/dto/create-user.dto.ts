@@ -5,15 +5,17 @@ export class CreateUserDto {
    // id: string | number;
 
     @IsEmail()
-    email: string;
+    email?: string;
 
     @MinLength(6, {message: 'Password is too short'})
-    password: string;
+    password?: string;
 
     @IsNumber()
-    roleId: number;
+    roleId?: number;
 
-    role: Role;
+    role?: Role;
 
-    avatar: string | null
+    avatar?: string | null;
+
+    refreshToken?: string;
 }

@@ -29,6 +29,8 @@ export class AuthService {
     });
   }
 
+  // todo необходимо реализовать методы: refreshToken, revokeToken (отмена токена), хз мб придется менять метод логина
+
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.getUser(email);
 
@@ -47,6 +49,8 @@ export class AuthService {
 
   async login(user: IUser) {
     const {id, email, alias, avatar, role, isEmailConfirmed} = user;
+    const tokens = await this.getTokens(id, email);
+    await this.updateRefreshToken(id, tokens.refreshToken);
     return {
       id, 
       email,
@@ -54,11 +58,50 @@ export class AuthService {
       avatar,
       role,
       isEmailConfirmed,
-      token: this.jwtService.sign({
+      /*token: this.jwtService.sign({
         id: user.id, 
         email: user.email
-      })
+      })*/
+      token: tokens.accessToken,
+      refreshToken: tokens.refreshToken
     }
+  }
+
+  async getTokens(userId: string | number, userEmail: string) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          userEmail,
+        },
+        {
+          secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+          expiresIn: '15m',
+        },
+      ),
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          userEmail,
+        },
+        {
+          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+          expiresIn: '7d',
+        },
+      ),
+    ]);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  async updateRefreshToken(userId: number, refreshToken: string) {
+    const hashedRefreshToken = await argon2.hash(refreshToken);
+    await this.usersService.updateUser(userId, {
+      refreshToken: hashedRefreshToken,
+    });
   }
 
   public sendVerificationLink(email: string, oldEmail: string | null) {
@@ -131,5 +174,43 @@ export class AuthService {
     } catch (error) {
       throw new BadRequestException('The server was unable to send the message!');
     }
+  }
+
+  async refreshToken() {
+    //const refreshToken = this.getRefreshToken();
+
+   /* const tokens = this.getTokens()
+            
+    if (!refreshToken) {
+      console.log('pnh not refrech token')
+      return
+    }
+*/
+   /* const user = await this.usersService.getUserById(userId);
+    
+    if (!user){
+      console.log('pnh not user')
+    }
+
+    // replace old refresh token with a new one and save
+   // user.refreshToken = user.refreshTokens.filter(x => x !== refreshToken);
+    user.refreshToken = this.generateRefreshToken();
+    //localStorage.setItem(usersKey, JSON.stringify(users));
+
+    this.login(user);*/
+  }
+
+  generateRefreshToken() {
+    const token = new Date().getTime().toString();
+
+    // add token cookie that expires in 7 days
+    const expires = new Date(Date.now() + 7*24*60*60*1000).toUTCString();
+    document.cookie = `fakeRefreshToken=${token}; expires=${expires}; path=/`;
+
+    return token;
+  }
+
+  getRefreshToken() {
+    return (document.cookie.split(';').find(x => x.includes('fakeRefreshToken')) || '=').split('=')[1];
   }
 }

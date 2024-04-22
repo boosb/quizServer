@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, RelationId, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, RelationId, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Role } from './role.entity';
+import { HistoryQuizzes } from 'src/history-quizzes/entities/history-quizzes.entity';
 
 @Entity() // todo ваще мне кажется, что хорошо было бы связать User and Role -> UserRole
 export class User {
@@ -21,12 +22,18 @@ export class User {
     @Column({ default: false })
     isEmailConfirmed: boolean;
 
+    @Column({ default: null })
+    refreshToken: string | null;
+
     @ManyToOne(() => Role, (role) => role.users)
     @JoinColumn()
     role: Role;
 
     @Column() // todo оставлю пометку, чтоб не забыть. Долго не понимал почему поле не сохраняется, проблема оказалась в декораторе RelationId
     roleId: number;
+
+    @OneToMany(() => HistoryQuizzes, (historyQuizzes) => historyQuizzes.user)
+    historyQuizzes: HistoryQuizzes[];
 
     @CreateDateColumn()
     createdAt: Date;

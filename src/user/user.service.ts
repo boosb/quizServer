@@ -55,6 +55,7 @@ export class UsersService {
       where: { id },
       relations: {
         role: true,
+        historyQuizzes: true
       },
     });
   }

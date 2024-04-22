@@ -45,7 +45,8 @@ export class QuizzesService {
             relations: {
                 questions: {
                     answers: true
-                }
+                },
+                historyQuizzes: {}
             }
         });
 
