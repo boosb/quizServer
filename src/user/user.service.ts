@@ -46,6 +46,7 @@ export class UsersService {
       where: { email },
       relations: {
         role: true,
+        historyQuizzes: true
       },
     });
   }

@@ -1,4 +1,5 @@
 import { Role } from "src/user/entities/role.entity"
+import { IHistoryQuizzes } from "./history-quizzes"
 
 export interface IUser {
     id: number
@@ -10,4 +11,5 @@ export interface IUser {
     isEmailConfirmed: boolean
     avatar: string | null
     alias: string | null
+    historyQuizzes: IHistoryQuizzes[]
 }

@@ -48,7 +48,7 @@ export class AuthService {
   }
 
   async login(user: IUser) {
-    const {id, email, alias, avatar, role, isEmailConfirmed} = user;
+    const {id, email, alias, avatar, role, isEmailConfirmed, historyQuizzes} = user;
     const tokens = await this.getTokens(id, email);
     await this.updateRefreshToken(id, tokens.refreshToken);
     return {
@@ -58,6 +58,7 @@ export class AuthService {
       avatar,
       role,
       isEmailConfirmed,
+      historyQuizzes,
       /*token: this.jwtService.sign({
         id: user.id, 
         email: user.email

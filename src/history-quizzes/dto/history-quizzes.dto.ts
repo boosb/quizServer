@@ -1,4 +1,4 @@
-import { IHistoryQuizzes } from "../entities/history-quizzes.entity";
+import { IHistoryQuizzes } from "src/types/history-quizzes";
 
 export class CreateHistoryQuizzesDto {
     history: IHistoryQuizzes;

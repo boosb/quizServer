@@ -18,6 +18,15 @@ export class HistoryQuizzesService {
         @InjectRepository(User) private readonly userRepository: Repository<User>
     ) {}
 
+    async getHistoryQuizzesAll() {
+        return await this.historyQuizzesRepository.find({
+            relations: {
+                quiz: true,
+                user: true
+            }
+        });
+    }
+
     async createHistoryQuizzes(createHistoryQuizzesDto: CreateHistoryQuizzesDto) {
         const {history, quizId, userId} = createHistoryQuizzesDto;
         const historyQuizzes = await this.historyQuizzesRepository.save({

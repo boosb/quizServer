@@ -1,10 +1,7 @@
 import { Quiz } from "src/quiz/entities/quiz.entity";
+import { IHistoryQuizzes } from "src/types/history-quizzes";
 import { User } from "src/user/entities/user.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId, UpdateDateColumn } from "typeorm";
-
-export interface IHistoryQuizzes {
-    [key:number]: number
-}
 
 @Entity()
 export class HistoryQuizzes {
